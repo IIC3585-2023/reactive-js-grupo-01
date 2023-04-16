@@ -2,17 +2,17 @@ const FOOD_ID = 2;
 const WALL_ID = 1;
 
 const transformDirections = {
-   left: { x: -1, y: 0 },
-   right: { x: 1, y: 0 },
-   up: { x: 0, y: -1 },
-   down: { x: 0, y: 1 },
+  left: { x: -1, y: 0 },
+  right: { x: 1, y: 0 },
+  up: { x: 0, y: -1 },
+  down: { x: 0, y: 1 },
 }
 
-const getPositions = (map, type) => 
-  map.array.flatMap((row, rowIndex) => 
+const getPositions = (map, type) =>
+  map.array.flatMap((row, rowIndex) =>
     row.map((cell, cellIndex) => cell === type ? { x: cellIndex, y: rowIndex, value: cell } : null)
   )
-  .filter(Boolean)
+    .filter(Boolean)
 
 const checkCollision = (player, map, type) => {
   const { x: dx, y: dy } = transformDirections[player.direction];
@@ -45,12 +45,12 @@ const renderMap = (map) => {
   });
 }
 
-  
+
 export function initGameState(map) {
   renderMap(map.array);
   return {
     players: [
-      { 
+      {
         position: map.pos_x,
         direction: "right",
         score: 0,
@@ -85,13 +85,16 @@ export function updateGameState(map) {
       }
       player.position.y += transformDirections[player.direction].y;
       player.position.x += transformDirections[player.direction].x;
+
+      const scoreValue = document.querySelector(`#score-p${index}`);
+      scoreValue.innerHTML = oldState.players[index].score;
     })
     return oldState // newState
   }
 }
 
-const transformRotations = {left: 0, right: 2, up: 1, down: 3}
-const playerTransform = ({x, y}, r) => `translate(${x * 33}px, ${y * 33}px)`
+const transformRotations = { left: 0, right: 2, up: 1, down: 3 }
+const playerTransform = ({ x, y }, r) => `translate(${x * 33}px, ${y * 33}px)`
 
 export function renderToDom({ players = 2 } = {}) {
   // Lo que estaba antes
@@ -99,7 +102,7 @@ export function renderToDom({ players = 2 } = {}) {
 
 
   const mapElement = document.querySelector(".map");
-  
+
   const playersPacs = Array.from({ length: players }, (_, index) => {
     const playerPac = document.createElement("div")
     playerPac.classList.add("pacman")
@@ -114,15 +117,15 @@ export function renderToDom({ players = 2 } = {}) {
     renderMap(gameState.map);
 
     // fin de lo que estaba antes
-     
+
     gameState.players.forEach((player, index) => {
       const { x, y } = player.position
-    //   playersPacs[index].style.transform  += "transform 0.5s"
+      //   playersPacs[index].style.transform  += "transform 0.5s"
       playersPacs[index].style.transform = playerTransform({ x, y }, player.direction);
-        //   playersPacs[index].style.rotate = `rotate(${}deg)`
-        const rotation = transformRotations[player.direction] * 90;
-        console.log(rotation);
-        // playersPacs[index].style.transform += ` rotate(${rotation}deg)`;
-      });
+      //   playersPacs[index].style.rotate = `rotate(${}deg)`
+      const rotation = transformRotations[player.direction] * 90;
+      console.log(rotation);
+      // playersPacs[index].style.transform += ` rotate(${rotation}deg)`;
+    });
   }
 }

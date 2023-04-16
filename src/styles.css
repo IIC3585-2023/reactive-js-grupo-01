@@ -1,10 +1,11 @@
 body {
   background-color: black;
+  color: yellow;
+  font-family: 'Trebuchet MS', sans-serif;
 }
 
 h1.title {
-  font-family: 'Roboto', sans-serif;
-  color: yellow;
+  text-align: center;
   /* text-transform: uppercase; */
 }
 
@@ -12,7 +13,16 @@ h1.title {
   color: red;
 }
 
-.container {
+.conatiner {
+  /* its must center everthing in a columns */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.map-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,7 +46,8 @@ h1.title {
   padding: 4px;
   width: 25px;
   height: 25px;
-  
+  max-width: 28px;
+  max-height: 28px;
 }
 
 .food {
@@ -61,9 +72,26 @@ h1.title {
   /* Mágia */
   transition: transform 0.5s linear;
   border-radius: 100%
-  /* rotate: transform 0s; */
+    /* rotate: transform 0s; */
 }
 
 .pacman-1 {
+  filter: hue-rotate(60deg);
+}
+
+.scores {
+  display: flex;
+  justify-content: space-between;
+  text-align: center;
+  align-items: center;
+  margin: auto;
+  padding: 0% 30%;
+}
+
+.score-value {
+  font-size: 2rem;
+}
+
+.score-header-p1, #score-p1 {
   filter: hue-rotate(60deg);
 }
