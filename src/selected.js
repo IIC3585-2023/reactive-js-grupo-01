@@ -1,42 +1,41 @@
 import { pipe } from "rxjs";
 import { map, withLatestFrom } from "rxjs/operators";
 
-import { mod } from "./utils.js";
-
-/** @typedef {{user: number, direction: -1 | 1}} UserAndDirection */
+/** @typedef {{user: number, direction: string}} UserAndDirection */
 /** @typedef {{[key: number]: {selected: number}}} SelectedState */
 
 const keys = [
-  ["ArrowLeft", "ArrowRight"],
-  ["KeyA", "KeyD"],
+  ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"],
+  ["KeyA", "KeyD", "KeyW", "KeyS"],
 ];
 
 /** @type {(event: KeyboardEvent) => boolean} */
 export const onlyArrowKeys = (event) => keys.flat().includes(event.code);
 
-/** @type {(event: KeyboardEvent) => UserAndDirection} */
 export const asUserAndDirection = (event) => {
-  for (const [user, [left, right]] of keys.entries()) {
+  for (const [userIndex, [left, right, up, down]] of keys.entries()) {
     if (event.code === left) {
-      return { user, direction: -1 };
+      return { userIndex, direction: 'left' };
     }
     if (event.code === right) {
-      return { user, direction: 1 };
+      return { userIndex, direction: 'right' };
+    }
+    if (event.code === up) {
+      return { userIndex, direction: 'up' };
+    }
+    if (event.code === down) {
+      return { userIndex, direction: 'down' };
     }
   }
 };
 
-/** @type {(params: { amountOfCards: number }) => (state: SelectedState, event: UserAndDirection) => SelectedState} */
-export const updateGameState =
-  ({ amountOfCards }) =>
-  (state, event) => ({
-    ...state,
-    [event.user]: { selected: mod(state[event.user].selected + event.direction, amountOfCards) },
-  });
+export const updateDirection = (oldState, { userIndex, direction }) => {
+  oldState[userIndex] = direction;
+  return oldState
+};
 
 /** @type {(params: { amountOfPlayers: number }) => SelectedState} */
-export const initialStateFor = ({ amountOfPlayers }) =>
-  Object.fromEntries(Array.from({ length: amountOfPlayers }, (_, i) => [i, { selected: 0 }]));
+export const initialDirectionFor = ({ amountOfPlayers }) => Array.from({ length: amountOfPlayers }, (_, i) => 'left');
 
 /** @type {import("rxjs").OperatorFunction<SelectedState, UserAndDirection>} */
 export const takeCurrentState = (observable) =>
