@@ -70,7 +70,7 @@ h1.title {
   background: yellow;
   /* background: url('../assets/pacman-0-left.png'); */
   /* Mágia */
-  transition: transform 0.5s linear;
+  transition: transform 0.35s linear;
   border-radius: 100%
     /* rotate: transform 0s; */
 }

@@ -17,7 +17,7 @@ function start({ amountOfPlayers = 2 }) {
     scan(updateDirection)
   );
 
-  interval(500)
+  interval(350)
     .pipe(
       takeCurrentState(directionsObservable),
       startWith(initGameState(defaultMap)),
