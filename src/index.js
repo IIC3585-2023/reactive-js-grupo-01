@@ -1,57 +1,38 @@
 import "./styles.css";
 
+
 import { fromEvent, interval } from "rxjs";
-import { filter, tap, map, scan, startWith } from "rxjs/operators";
+import { filter, tap, map, scan, startWith, takeWhile } from "rxjs/operators";
 
 import { preventDefault } from "./events";
-import { asUserAndDirection, initialStateFor, onlyArrowKeys, takeCurrentState, updateGameState } from "./selected";
+import { asUserAndDirection, initialDirections, onlyArrowKeys, takeCurrentState, updateDirection } from "./selected";
+import { defaultMap } from "./map";
+import { initGameState, updateGameState, renderToDom } from "./game.js"
 
-function start({ amountOfPlayers = 2, amountOfCards = 5 }) {
-  const selectedObservable = fromEvent(window, "keydown").pipe(
+const btn = document.getElementById("game-button");
+
+fromEvent(btn, "click").subscribe(() => {
+  btn.style.display = "none";
+
+  const directionsObservable = fromEvent(window, "keydown").pipe(
     filter(onlyArrowKeys),
     tap(preventDefault),
     map(asUserAndDirection),
-    startWith(initialStateFor({ amountOfPlayers })),
-    scan(updateGameState({ amountOfCards }))
+    startWith(initialDirections),
+    scan(updateDirection)
   );
 
-  selectedObservable.subscribe((selectedState) => {
-    // Aquí se actualiza el DOM de lo seleccionado
-    const decks = document.querySelector(".decks");
-    decks.innerHTML = "";
-    for (const [userIndex, { selected }] of Object.entries(selectedState)) {
-      console.log(userIndex, selected);
-      const deck = document.createElement("div");
-      deck.classList.add("deck");
-
-      const userEl = document.createElement("div");
-      userEl.classList.add("user");
-      userEl.innerText = userIndex;
-      deck.appendChild(userEl);
-
-      const deckCardsEl = document.createElement("ul");
-      deckCardsEl.classList.add("deck-cards");
-      for (let i = 0; i < amountOfCards; i++) {
-        const cardEl = document.createElement("li");
-        cardEl.classList.add("card");
-        cardEl.innerText = `Carta ${i}`;
-        if (i === selected) {
-          cardEl.classList.add("selected");
-        }
-        deckCardsEl.appendChild(cardEl);
+  interval(350)
+    .pipe(
+      takeCurrentState(directionsObservable),
+      startWith(initGameState(defaultMap)),
+      scan(updateGameState(defaultMap)),
+      takeWhile(gameState => !gameState.finished, true),
+    ).subscribe({
+      next: renderToDom({ map: defaultMap }),
+      complete: () => {
+        btn.style.display = "block";
+        btn.textContent = "Press To Restart!";
       }
-      deck.appendChild(deckCardsEl);
-
-      decks.appendChild(deck);
-    }
-  });
-
-  interval(1000)
-    .pipe(takeCurrentState(selectedObservable))
-    .subscribe((selectedState) => {
-      // Aquí va la lógica del juego
-      console.log(JSON.stringify(selectedState));
-    });
-}
-
-fromEvent(window, "DOMContentLoaded").subscribe(start);
+    })
+});

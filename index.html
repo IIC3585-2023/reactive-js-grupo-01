@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reactive JS</title>
-  </head>
-  <body>
-    <div class="decks"></div>
-    <script type="module" src="./src/index.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+
+  <title>ReactiveJS-Man</title>
+  <link rel="icon" href="https://seeklogo.com/images/P/Pac-Man-logo-3E5987B905-seeklogo.com.png" type="image/png">
+</head>
+
+<body>
+  <main class="container">
+    <div class="message"></div>
+    <div class="settings">
+      <button id="game-button" >Press Play To Start</button>
+    </div>
+    <div class="scores">
+      <h2 class="score-header">Yellow Score</h2>
+      <p id="score-p0" class="score-value">0</p>
+      <h2 class="score-header score-header-p1">Green Score</h2>
+      <p id="score-p1" class="score-value">0</p>
+    </div>
+    <div class="map-container">
+      <div class="map"></div>
+    </div>
+  </main>
+  <script type="module" src="./src/index.js"></script>
+</body>
+
 </html>
