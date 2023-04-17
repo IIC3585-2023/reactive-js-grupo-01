@@ -8,6 +8,20 @@
 | Benjamín Vicente | benjavicente@uc.cl | [@benjavicente](https://github.com/benjavicente) |
 | José Madriaza | jm.madriaza@uc.cl | [@LeoMo-27](https://github.com/LeoMo-27) |
 
-## How to run
+## Setup
 
-To run the project, just open the `index.html` file in your browser.
+Make sure to install the dependencies:
+
+```bash
+npm i pnpm -g
+# pnpm
+pnpm install
+```
+
+## Development Server
+
+Start the development server on `http://localhost:5173`
+
+```bash
+pnpm dev -o
+```
