@@ -4,22 +4,20 @@ body {
   font-family: 'Trebuchet MS', sans-serif;
 }
 
-h1.title {
+.message {
   text-align: center;
+  color: white;
   /* text-transform: uppercase; */
 }
 
-.selected {
-  color: red;
-}
-
-.conatiner {
-  /* its must center everthing in a columns */
+#gameButton {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
+}
+
+.message, h2, p {
+  margin: 0;
 }
 
 .map-container {
@@ -30,6 +28,10 @@ h1.title {
 
 /* Define the map class */
 .map {
+  
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
   display: flex;
   flex-wrap: wrap;
   max-width: 630px;
@@ -63,20 +65,33 @@ h1.title {
   background-color: black;
 }
 
-.pacman {
+.pacman, .ghost {
   position: absolute;
   width: 33px;
   height: 33px;
-  background: yellow;
-  /* background: url('../assets/pacman-0-left.png'); */
-  /* Mágia */
+  /* Movimiento continuo */
   transition: transform 0.35s linear;
-  border-radius: 100%
-    /* rotate: transform 0s; */
 }
 
-.pacman-1 {
-  filter: hue-rotate(60deg);
+.pacman-img {
+  background-image: url('../assets/pac.gif');
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.ghost {
+  background: url('../assets/yellow_ghost.gif');
+  filter: hue-rotate(180deg);
+  /* Mágia */
+  z-index: 100;
+  background-size: cover;
+}
+
+.settings {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .scores {
@@ -84,14 +99,14 @@ h1.title {
   justify-content: space-between;
   text-align: center;
   align-items: center;
-  margin: auto;
-  padding: 0% 30%;
+  /* margin: auto; */
+  padding: 1% 30%;
 }
 
 .score-value {
   font-size: 2rem;
 }
 
-.score-header-p1, #score-p1 {
+.pacman-1, .score-header-p1, #score-p1 {
   filter: hue-rotate(60deg);
 }

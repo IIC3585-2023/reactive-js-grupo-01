@@ -1,19 +1,24 @@
 import "./styles.css";
 
+
 import { fromEvent, interval } from "rxjs";
-import { filter, tap, map, scan, startWith } from "rxjs/operators";
+import { filter, tap, map, scan, startWith, takeWhile } from "rxjs/operators";
 
 import { preventDefault } from "./events";
-import { asUserAndDirection, initialDirectionFor, onlyArrowKeys, takeCurrentState, updateDirection } from "./selected";
+import { asUserAndDirection, initialDirections, onlyArrowKeys, takeCurrentState, updateDirection } from "./selected";
 import { defaultMap } from "./map";
 import { initGameState, updateGameState, renderToDom } from "./game.js"
 
-function start({ amountOfPlayers = 2 }) {
+const btn = document.getElementById("game-button");
+
+fromEvent(btn, "click").subscribe(() => {
+  btn.style.display = "none";
+
   const directionsObservable = fromEvent(window, "keydown").pipe(
     filter(onlyArrowKeys),
     tap(preventDefault),
     map(asUserAndDirection),
-    startWith(initialDirectionFor({ amountOfPlayers })),
+    startWith(initialDirections),
     scan(updateDirection)
   );
 
@@ -21,8 +26,13 @@ function start({ amountOfPlayers = 2 }) {
     .pipe(
       takeCurrentState(directionsObservable),
       startWith(initGameState(defaultMap)),
-      scan(updateGameState(defaultMap))
-    ).subscribe(renderToDom({ map: defaultMap }))
-}
-
-fromEvent(window, "DOMContentLoaded").subscribe(start);
+      scan(updateGameState(defaultMap)),
+      takeWhile(gameState => !gameState.finished, true),
+    ).subscribe({
+      next: renderToDom({ map: defaultMap }),
+      complete: () => {
+        btn.style.display = "block";
+        btn.textContent = "Press To Restart!";
+      }
+    })
+});
